@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="number"],
+    textarea {
+        @apply w-full border my-1 py-2 px-3 rounded-2xl;
+    }
+
+    textarea{
+        height:140px ;
+    }
+  }
+
+  /* In Tailwind CSS, the @apply directive is usually placed before any custom styles. So, in the code above, @apply bg-gray-300; is used to apply Tailwind utility classes first, and then the custom background-color property is defined afterward. This order is important for the styles to be applied correctly. */
+@layer components {
+    button.primary{
+        @apply bg-gray-300 w-full rounded-2xl text-white p-2 ;
+        background-color:#F5385D ;
+
+    }
+}
