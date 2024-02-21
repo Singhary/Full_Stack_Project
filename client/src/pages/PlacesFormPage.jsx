@@ -63,13 +63,24 @@ function preInput(header , description){
 
 async function savePlace(ev){
    ev.preventDefault();
-
-   await axios.post('/places',{title , address , addedPhotos , 
-    description , perks ,extraInfo,
-    checkIn , checkOut,maxGuest
-  }) ;
+   const placeData={
+    title , address , addedPhotos , 
+      description , perks ,extraInfo,
+      checkIn , checkOut,maxGuest
+   } ;
    
-  setRedirect(true) ;
+   if(id){
+    //updata
+    await axios.put('/places',{
+      id, ...placeData ,
+    }) ;
+    setRedirect(true) ;
+   }
+   else{
+    //new place
+    await axios.post('/places',placeData) ;
+    setRedirect(true) ;
+   }
 }
 
   if(redirect){
