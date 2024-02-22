@@ -184,8 +184,31 @@ app.get('/places/:id' , async(req , res)=>{
     res.json(await place.findById(id));
 })
 
-app.put('/places/:id' , async(req,res)=>{
-    
-})
+//here id is of the "place" that we need to find
+app.put('/places' , async(req,res)=>{
+   
+    const{token} = req.cookies ;
+    const{
+        id,title , address ,addedPhotos , description ,
+          perks , extraInfo , checkIn , checkOut , maxGuests} = req.body;
+
+        jwt.verify(token , jwtSecret,{} , async(err , userData)=>{
+          if(err){
+            throw err ;
+          }
+            const placeDoc = await place.findById(id); 
+//tostring is required here as user.id is a string and placeDoc.id is in the form {json} we convert both of them in string first then we compared it.
+
+        if(userData.id==placeDoc.owner.toString()){
+          placeDoc.set({
+            title , address ,photos:addedPhotos , description ,
+            perks , extraInfo , checkIn , checkOut , maxGuests,
+           });
+        await placeDoc.save() ;
+        res.json('ok') ;
+        }
+       });
+});
+
 
 app.listen(4000) ;

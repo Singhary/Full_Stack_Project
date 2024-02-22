@@ -30,6 +30,7 @@ export default function PlacesFormPage(){
         
         setTitle(data.title) ;
         setDescription(data.description) ;
+        SetAddedPhotos(data.photos) ;
         setAddress(data.address);
         setCheckIn(data.checkIn);
         setCheckOut(data.checkOut);
@@ -71,6 +72,7 @@ async function savePlace(ev){
    
    if(id){
     //updata
+    console.log("Started")
     await axios.put('/places',{
       id, ...placeData ,
     }) ;
