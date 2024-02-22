@@ -130,6 +130,7 @@ app.post('/upload-by-link',async(req,res)=>{
     res.json(newName);
 });
 
+//multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files. 
 const photosMiddleware = multer({dest:'uploads/'});
 app.post('/upload' ,photosMiddleware.array('photos',100),(req,res)=>{
    const uploadedFiles=[] ;
