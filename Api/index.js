@@ -132,7 +132,7 @@ app.post('/upload-by-link',async(req,res)=>{
 
 //multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files. 
 const photosMiddleware = multer({dest:'uploads/'});
-app.post('/upload' ,photosMiddleware.array('photos',100),(req,res)=>{
+app.post('/upload' ,photosMiddleware.array('photos',200),(req,res)=>{
    const uploadedFiles=[] ;
     for(let i=0 ; i<req.files.length ;i++){
          const{path , originalname} = req.files[i];
@@ -152,7 +152,7 @@ app.post('/upload' ,photosMiddleware.array('photos',100),(req,res)=>{
 app.post('/places',async(req,res)=>{
     const{token} = req.cookies ;
     const{title , address ,addedPhotos , description ,
-          perks , extraInfo , checkIn , checkOut , maxGuests} = req.body;
+          perks , extraInfo , checkIn , checkOut , maxGuests ,price} = req.body;
 
     let placeDocs;
 
@@ -163,14 +163,14 @@ app.post('/places',async(req,res)=>{
          placeDocs= await place.create({
             owner:userData.id,
             title , address ,photos:addedPhotos , description ,
-          perks , extraInfo , checkIn , checkOut , maxGuests,
+          perks , extraInfo , checkIn , checkOut , maxGuests,price,
            });
       
      }) ;
     res.json({placeDocs}) ;  
 })
 
-app.get('/places' , (req , res)=>{
+app.get('/user-places' , (req , res)=>{
     const{token} = req.cookies ;
 
     jwt.verify(token , jwtSecret,{} , async(err , userData)=>{
@@ -191,7 +191,7 @@ app.put('/places' , async(req,res)=>{
     const{token} = req.cookies ;
     const{
         id,title , address ,addedPhotos , description ,
-          perks , extraInfo , checkIn , checkOut , maxGuests} = req.body;
+          perks , extraInfo , checkIn , checkOut , maxGuests ,price} = req.body;
 
         jwt.verify(token , jwtSecret,{} , async(err , userData)=>{
           if(err){
@@ -203,12 +203,16 @@ app.put('/places' , async(req,res)=>{
         if(userData.id==placeDoc.owner.toString()){
           placeDoc.set({
             title , address ,photos:addedPhotos , description ,
-            perks , extraInfo , checkIn , checkOut , maxGuests,
+            perks , extraInfo , checkIn , checkOut , maxGuests,price
            });
         await placeDoc.save() ;
         res.json('ok') ;
         }
        });
+});
+
+app.get('/places' , async(req,res)=>{
+    res.json(await place.find());
 });
 
 
