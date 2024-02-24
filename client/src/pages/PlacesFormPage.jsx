@@ -38,6 +38,7 @@ export default function PlacesFormPage(){
         setExtraInfo(data.extraInfo);
         setPerks(data.perks);
         setPrice(data.price) ;
+        setMaxGuest(data.maxGuest) ;
 
       });
       
