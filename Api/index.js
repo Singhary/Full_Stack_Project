@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const  mongoose  = require('mongoose');
 const User = require('./models/User');
 const place = require('./models/Place') ;
+const Booking = require('./models/Booking');
 const CookieParser = require('cookie-parser') ;
 const cookieParser = require('cookie-parser');
 const imageDownloader=require('image-downloader');
@@ -215,7 +216,22 @@ app.get('/places' , async(req,res)=>{
     res.json(await place.find());
 });
 
+app.post('/bookings',(req ,res)=>{
+    console.log(req.body) ;
+    const {place , checkIn ,
+           checkOut , numberOfGuests ,
+           name ,phone ,price} = req.body;
 
+    Booking.create({
+        place , checkIn ,
+           checkOut , numberOfGuests ,
+           name ,phone ,price
+    }).then((doc)=>{
+         res.json(doc);
+    }).catch((err)=>{
+        throw err ;
+    });
+});
 
 
 app.listen(4000) ;
