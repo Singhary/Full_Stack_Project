@@ -39,6 +39,18 @@ app.use(cors({
 //console.log(process.env.MONGO_URL) ;
 mongoose.connect(process.env.MONGO_URL) ;
 
+function getUserDataFromToken(req){
+   
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token , jwtSecret,{} , async(err , userData)=>{
+            if(err){
+              reject(err) ;
+            }
+            resolve(userData) ;
+        });
+    })
+}
+
 app.get('/test',(req,res)=>{
     res.json("test ok i") ;
     
@@ -216,8 +228,11 @@ app.get('/places' , async(req,res)=>{
     res.json(await place.find());
 });
 
-app.post('/bookings',(req ,res)=>{
-    console.log(req.body) ;
+app.post('/bookings',async(req ,res)=>{
+    
+    const userData = await getUserDataFromToken(req) ;
+
+
     const {place , checkIn ,
            checkOut , numberOfGuests ,
            name ,phone ,price} = req.body;
@@ -225,7 +240,8 @@ app.post('/bookings',(req ,res)=>{
     Booking.create({
         place , checkIn ,
            checkOut , numberOfGuests ,
-           name ,phone ,price
+           name ,phone ,price,
+           user:userData.id ,
     }).then((doc)=>{
          res.json(doc);
     }).catch((err)=>{
@@ -233,5 +249,15 @@ app.post('/bookings',(req ,res)=>{
     });
 });
 
+// Without Populate:
+
+// When you retrieve a post, the author field only contains the ObjectId of the user.
+// With Populate:
+
+// When you use populate, Mongoose automatically replaces the ObjectId in the author field with the actual user details from the users collection.
+app.get('/bookings' , async(req,res)=>{
+  const userData= await getUserDataFromToken(req);
+    res.json(await Booking.find({user:userData.id}).populate('place'))
+})
 
 app.listen(4000) ;
