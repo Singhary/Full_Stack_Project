@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom" ;
 import PlaceGallery from "../PlaceGallery";
 import AddressLink from "../AddressLink";
 import BookingDates from "../BookingDates";
+import {loadStripe} from "@stripe/stripe-js"
 
 export default function BookingPage(){
     
@@ -14,7 +15,6 @@ export default function BookingPage(){
         if(id){
             axios.get('/bookings').then((response)=>{
               const foundBooking = response.data.find(({_id}) => _id === id);
-
               if(foundBooking){
                 setBooking(foundBooking) ;
               }
@@ -24,6 +24,36 @@ export default function BookingPage(){
     
     if(!booking){
         return '' ;
+    }
+
+    //payment method.
+    async function makePayment(){
+      
+      const stripe = await loadStripe("pk_test_51OpOozSIT0chNjHqL7hUp5cRQwXFbPBRpVnTmXI4FHHIeSFrJHMx7IfYanWO9ZXutcXv99KfFS8kZ3BBqfAnx14H00oT1pZ0Ei");
+
+      const body ={
+         products:booking,
+      }
+
+      const headers={
+        "Content-Type" :"application/json"
+      }
+
+      const response= await fetch("/create-checkout-session",{
+        method:"POST",
+        headers:headers,
+        body:body,
+      })
+
+      const session = await response.json() ;
+
+      const result = stripe.redirectToCheckout({
+        sessionId:session.id
+      });
+
+      if(result.error){
+        console.log(result.error) ;
+      }
     }
 
 
@@ -43,6 +73,13 @@ export default function BookingPage(){
         </button>
       </div>
       <PlaceGallery place={booking.place} />
+        
+        <div className="mt-2">
+          <button className="primary btn btn-success font-semibold" onClick={makePayment}>checkout</button>
         </div>
+
+        </div>
+      
+
     )
 }
