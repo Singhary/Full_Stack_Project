@@ -283,7 +283,7 @@ app.post('/payments',async(req,res)=>{
         }),
         
         shipping_address_collection: {
-            allowed_countries: ['US', 'CA', 'GB' ,'IN'], // Replace with allowed countries (other than India)
+            allowed_countries: ['US', 'CA', 'GB'], // Replace with allowed countries (other than India)
           },
         
 
