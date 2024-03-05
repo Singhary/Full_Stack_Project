@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const imageDownloader=require('image-downloader');
 const multer = require('multer');
 const fs = require('fs') ;
+const stripe = require('stripe')("sk_test_51OpOozSIT0chNjHqnTA8afnlYZue3jnVdn4lRaIdNh0CBjyZgxA6r5955OvEwk3K8XXwApzZ7LfdHpZ1FeyHZB6E00FUKUrYcZ")
 const app = express() ;
 require('dotenv').config();
 
@@ -259,5 +260,44 @@ app.get('/bookings' , async(req,res)=>{
   const userData= await getUserDataFromToken(req);
     res.json(await Booking.find({user:userData.id}).populate('place'))
 })
+
+//check-out api
+app.post('/payments',async(req,res)=>{
+     const products = req.body ;
+     console.log(products);
+
+     const paymentIntent = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: products.map((product)=>{
+            return{
+                price_data:{
+                    currency:'inr',
+                    product_data:{
+                        name:product.place.title,
+                        
+                    },
+                    unit_amount:product.price*100,
+                },
+                quantity:1,
+            }
+        }),
+        
+        shipping_address_collection: {
+            allowed_countries: ['US', 'CA', 'GB' ,'IN'], // Replace with allowed countries (other than India)
+          },
+        
+
+        customer_email: "opsingh@gmail.com",        
+       
+        mode:'payment',
+        success_url:'http://localhost:5173/Success',
+        cancel_url:'http://localhost:5173/Cancel',
+        
+     });
+     
+      console.log(paymentIntent);
+     res.json({paymentIntentId:paymentIntent.id});
+          
+});
 
 app.listen(4000) ;

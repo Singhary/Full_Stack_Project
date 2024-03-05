@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom" ;
+import { json, useParams } from "react-router-dom" ;
 import PlaceGallery from "../PlaceGallery";
 import AddressLink from "../AddressLink";
 import BookingDates from "../BookingDates";
@@ -31,26 +31,21 @@ export default function BookingPage(){
       
       const stripe = await loadStripe("pk_test_51OpOozSIT0chNjHqL7hUp5cRQwXFbPBRpVnTmXI4FHHIeSFrJHMx7IfYanWO9ZXutcXv99KfFS8kZ3BBqfAnx14H00oT1pZ0Ei");
 
-      const body ={
-         products:booking,
-      }
+      const body =[
+         booking
+      ]
 
       const headers={
         "Content-Type" :"application/json"
       }
-
-      const response= await fetch("/create-checkout-session",{
-        method:"POST",
-        headers:headers,
-        body:body,
-      })
-
-      const session = await response.json() ;
-
-      const result = stripe.redirectToCheckout({
-        sessionId:session.id
+       
+    
+      const response =await axios.post('/payments' , body);
+     
+      const result = await stripe.redirectToCheckout({
+        sessionId:response.data.paymentIntentId,
       });
-
+     
       if(result.error){
         console.log(result.error) ;
       }

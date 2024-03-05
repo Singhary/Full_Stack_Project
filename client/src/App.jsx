@@ -12,7 +12,8 @@ import PlacesFormPage from './pages/PlacesFormPage';
 import PlacePage from './pages/PlacePage';
 import BookingsPage from './pages/BookingsPage';
 import BookingPage from './pages/BookingPage';
-
+import Success from './pages/Success';
+import Cancel from './pages/Cancel';
 
 axios.defaults.baseURL='http://localhost:4000' ;
 axios.defaults.withCredentials=true;
@@ -36,7 +37,9 @@ function App() {
         <Route path='/account/places/:id' element={<PlacesFormPage/>} />
         <Route path='/place/:id' element={<PlacePage/>}/>
         <Route path='/account/booking' element={<BookingsPage/>} />
-        <Route path='/account/bookings/:id' element={<BookingPage/>} />        
+        <Route path='/account/bookings/:id' element={<BookingPage/>} />
+        <Route path='/Success' element={<Success/>} />
+        <Route path='/Cancel' element={<Cancel/>}/>
       </Route>
      </Routes>
     </UserContextProvider>
