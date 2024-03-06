@@ -13,7 +13,7 @@ const multer = require('multer');
 const fs = require('fs') ;
 const stripe = require('stripe')("sk_test_51OpOozSIT0chNjHqnTA8afnlYZue3jnVdn4lRaIdNh0CBjyZgxA6r5955OvEwk3K8XXwApzZ7LfdHpZ1FeyHZB6E00FUKUrYcZ")
 const app = express() ;
-require('dotenv').config();
+require('dotenv').config({path:__dirname+'/.env.local'});
 
 //pass-Aryan12345
 
