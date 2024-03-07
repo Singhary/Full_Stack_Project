@@ -33,7 +33,7 @@ app.use('/uploads',express.static(__dirname+'/uploads')) ;
 //This is important to share resources which are present at different ip/domain.
 app.use(cors({
     credentials:true,
-    origin:"http://localhost:5173" ,
+    origin:"http://localhost:5174" ,
 }));
 
 //IT bring all the things that are stored in .env here we have saved the connecting string of moongoose in env so we are taking it from env.
