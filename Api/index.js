@@ -18,7 +18,7 @@ require('dotenv').config({path:__dirname+'/.env.local'});
 //pass-Aryan12345
 
 const bcryptSalt =bcrypt.genSaltSync(10) ;
-const jwtSecret= 'w9u3e90ejdifhdshrfohwfjleheno+++cdsokpj'
+const jwtSecret= 'w9u3e90ejdifhdshrfohwfjleheno+++cdsokpj' ;
 
 // express.json() is a built-in middleware in Express that parses incoming requests with JSON payloads.
 // When a client sends a POST or PUT request with a JSON payload in the request body, this middleware will parse that JSON data and make it available in the request.body property.
